@@ -1,0 +1,8 @@
+
+global def hardfloatProject = millScalaProject "hardfloat" here (chisel3Project, Nil) "hardfloat" "HardfloatBase"
+
+publish scalaProjects = hardfloatProject
+
+global def rocketchipProject = millScalaProject "rocketchip" here (hardfloatProject, Nil) "rocketchip" "RocketChipBase"
+
+publish scalaProjects = rocketchipProject
