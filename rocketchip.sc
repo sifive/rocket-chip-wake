@@ -15,6 +15,7 @@ trait RocketChipCommonModule extends SbtModule with CommonOptions {
 }
 
 trait RocketChipBase extends RocketChipCommonModule with WakeModule with SingleJar {
+  def millSourcePath = os.pwd / up / "rocket-chip"
 
   object macros extends RocketChipCommonModule
 
