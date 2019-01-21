@@ -5,7 +5,7 @@
         "source": "git@github.com:sifive/chisel3-wake.git"
     },
     {
-        "commit": "ce4fcf333b7ff095331cec6eecaf12ce3963ac18",
+        "commit": "c15bfe49d556bd91b05a9c6d5d0efdadea5cf6b0",
         "name": "rocket-chip",
         "source": "git@github.com:freechipsproject/rocket-chip.git"
     },
