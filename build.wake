@@ -30,3 +30,66 @@ global def rocket_vlsi_mem_gen options =
     vlsi_mem_gen, confFile, outputDir, Nil
 
   job cmdline inputs | output
+
+tuple RocketChipGeneratorOptions =
+  global Jar           String
+  global TargetDir     String
+  global TopModuleName String
+  global ConfigNames   List String
+  global ExtraSources  List String
+
+global def makeRocketChipGeneratorOptions jar targetDir topModule configs =
+  RocketChipGeneratorOptions jar targetDir topModule configs Nil
+
+tuple RocketChipGeneratorOutputs =
+  DTS_            String
+  FirrtlFile_     String
+  FirrtlAnnoFile_ String
+  RomConf_        String
+  AllOutputs_     List String
+  InputOptions_   RocketChipGeneratorOptions
+
+global def getRocketChipGeneratorOutputsDTS            = getRocketChipGeneratorOutputsDTS_
+global def getRocketChipGeneratorOutputsFirrtlFile     = getRocketChipGeneratorOutputsFirrtlFile_
+global def getRocketChipGeneratorOutputsFirrtlAnnoFile = getRocketChipGeneratorOutputsFirrtlAnnoFile_
+global def getRocketChipGeneratorOutputsRomConf        = getRocketChipGeneratorOutputsRomConf_
+global def getRocketChipGeneratorOutputsAllOutputs     = getRocketChipGeneratorOutputsAllOutputs_
+global def getRocketChipGeneratorOutputsInputOptions   = getRocketChipGeneratorOutputsInputOptions_
+
+global def runRocketChipGenerator options =
+  def jar = options.getRocketChipGeneratorOptionsJar
+  def runDir = "rocket-chip"
+  def targetDir = options.getRocketChipGeneratorOptionsTargetDir
+
+  def cmdline =
+    def rootPackage = "_root_"
+    def main = "freechips.rocketchip.system.Generator"
+    def configs = catWith "_" options.getRocketChipGeneratorOptionsConfigNames
+    def topModule = options.getRocketChipGeneratorOptionsTopModuleName
+    def relJar = relative runDir jar
+    def relTargetDir = relative runDir targetDir
+    which "java", "-cp", relJar, main,
+    relTargetDir,
+    rootPackage, topModule,
+    rootPackage, configs,
+    Nil
+
+  def inputs =
+    def bootrom = simplify "{runDir}/bootrom/bootrom.img"
+    def extras = options.getRocketChipGeneratorOptionsExtraSources
+    jar, bootrom, targetDir, extras
+
+  def generatorJob =
+    makeJob cmdline inputs
+    | setJobDirectory runDir
+    | runJob
+
+  def getFile regex = filter (matches regex) allOutputs | head
+
+  def allOutputs = map first generatorJob.outputs
+  def annoFile    = getFile '.*\.anno\.json'
+  def firrtlFile  = getFile '.*\.fir'
+  def romConfFile = getFile '.*\.rom\.conf'
+  def dtsFile     = getFile '.*\.dts'
+
+  RocketChipGeneratorOutputs dtsFile firrtlFile annoFile romConfFile allOutputs options
