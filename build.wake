@@ -6,3 +6,27 @@ publish scalaProjects = hardfloatProject
 global def rocketchipProject = millScalaProject "rocketchip" here (hardfloatProject, Nil) "rocketchip" "RocketChipBase"
 
 publish scalaProjects = rocketchipProject
+
+def vlsi_mem_gen = whichIn "rocket-chip/scripts" "vlsi_mem_gen"
+
+tuple VLSIMemGenOptions =
+  global BlackBox Boolean
+  global ConfFile String
+  global OutputFile String
+
+global def makeVLSIMemGenOptions confFile outputFile = VLSIMemGenOptions False confFile outputFile
+
+global def rocket_vlsi_mem_gen options =
+  def cmdline =
+    def blackBox = if options.getVLSIMemGenOptionsBlackBox then "-b", Nil else Nil
+    def outputFile = "-o", options.getVLSIMemGenOptionsOutputFile, Nil
+    def confFile = options.getVLSIMemGenOptionsConfFile, Nil
+    vlsi_mem_gen, (blackBox ++ outputFile ++ confFile)
+
+  def inputs =
+    def confFile = options.getVLSIMemGenOptionsConfFile
+    def outputFile = options.getVLSIMemGenOptionsOutputFile
+    def outputDir = simplify "{outputFile}/.."
+    vlsi_mem_gen, confFile, outputDir, Nil
+
+  job cmdline inputs | output
