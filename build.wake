@@ -86,7 +86,7 @@ global def runRocketChipGenerator options =
 
   def getFile regex = filter (matches regex) allOutputs | head
 
-  def allOutputs = map first generatorJob.outputs
+  def allOutputs = generatorJob.outputs
   def annoFile    = getFile '.*\.anno\.json'
   def firrtlFile  = getFile '.*\.fir'
   def romConfFile = getFile '.*\.rom\.conf'
