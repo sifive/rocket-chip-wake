@@ -48,7 +48,7 @@ tuple RocketChipGeneratorOutputs =
   RomConf_        String
   AllOutputs_     List String
   InputOptions_   RocketChipGeneratorOptions
-  OMFile_         Option JValue
+  OMFile_         Option String
 
 global def getRocketChipGeneratorOutputsDTS             = getRocketChipGeneratorOutputsDTS_
 global def getRocketChipGeneratorOutputsFirrtlFile      = getRocketChipGeneratorOutputsFirrtlFile_
@@ -97,8 +97,6 @@ global def runRocketChipGenerator options =
   def firrtlFile  = getFile '.*\.fir'
   def romConfFile = getFile '.*\.rom\.conf'
   def dtsFile     = getFile '.*\.dts'
-  def omFile      = match (getFileOpt '.*\.objectmodel\.json')
-    None      = None
-    Some json = parseJSON json | Some
+  def omFile      = getFileOpt '.*\.objectmodel\.json'
 
   RocketChipGeneratorOutputs dtsFile firrtlFile annoFile romConfFile allOutputs options omFile
