@@ -97,6 +97,6 @@ global def runRocketChipGenerator options =
   def firrtlFile  = getFile '.*\.fir'
   def romConfFile = getFile '.*\.rom\.conf'
   def dtsFile     = getFile '.*\.dts'
-  def omFile      = getFileOpt '.*\.objectmodel\.json'
+  def omFile      = getFileOpt '.*\.objectModel\.json'
 
   RocketChipGeneratorOutputs dtsFile firrtlFile annoFile romConfFile allOutputs options omFile
