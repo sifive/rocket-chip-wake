@@ -7,11 +7,11 @@ global def rocketchipProject = millScalaProject "rocketchip" here (hardfloatProj
 
 publish scalaProjects = rocketchipProject
 
-def vlsi_mem_gen = whichIn "rocket-chip/scripts" "vlsi_mem_gen"
+def vlsi_mem_gen = sources "rocket-chip/scripts" 'vlsi_mem_gen' | head
 
 tuple VLSIMemGenOptions =
   global BlackBox Boolean
-  global ConfFile String
+  global ConfFile Path
   global OutputFile String
 
 global def makeVLSIMemGenOptions confFile outputFile = VLSIMemGenOptions False confFile outputFile
@@ -20,35 +20,35 @@ global def rocket_vlsi_mem_gen options =
   def cmdline =
     def blackBox = if options.getVLSIMemGenOptionsBlackBox then "-b", Nil else Nil
     def outputFile = "-o", options.getVLSIMemGenOptionsOutputFile, Nil
-    def confFile = options.getVLSIMemGenOptionsConfFile, Nil
-    vlsi_mem_gen, (blackBox ++ outputFile ++ confFile)
+    def confFile = options.getVLSIMemGenOptionsConfFile.getPathName, Nil
+    vlsi_mem_gen.getPathName, (blackBox ++ outputFile ++ confFile)
 
   def inputs =
     def confFile = options.getVLSIMemGenOptionsConfFile
     def outputFile = options.getVLSIMemGenOptionsOutputFile
-    def outputDir = simplify "{outputFile}/.."
+    def outputDir = simplify "{outputFile}/.." | mkdir 0775
     vlsi_mem_gen, confFile, outputDir, Nil
 
-  job cmdline inputs | output
+  job cmdline inputs | getJobOutput
 
 tuple RocketChipGeneratorOptions =
-  global Jar           String
-  global TargetDir     String
+  global Jar           Path
+  global TargetDir     Path
   global TopModuleName String
   global ConfigNames   List String
-  global ExtraSources  List String
+  global ExtraSources  List Path
 
 global def makeRocketChipGeneratorOptions jar targetDir topModule configs =
   RocketChipGeneratorOptions jar targetDir topModule configs Nil
 
 tuple RocketChipGeneratorOutputs =
-  DTS_            String
-  FirrtlFile_     String
-  FirrtlAnnoFile_ String
-  RomConf_        String
-  AllOutputs_     List String
+  DTS_            Path
+  FirrtlFile_     Path
+  FirrtlAnnoFile_ Path
+  RomConf_        Path
+  AllOutputs_     List Path
   InputOptions_   RocketChipGeneratorOptions
-  OMFile_         Option String
+  OMFile_         Option Path
 
 global def getRocketChipGeneratorOutputsDTS             = getRocketChipGeneratorOutputsDTS_
 global def getRocketChipGeneratorOutputsFirrtlFile      = getRocketChipGeneratorOutputsFirrtlFile_
@@ -68,8 +68,8 @@ global def runRocketChipGenerator options =
     def main = "freechips.rocketchip.system.Generator"
     def configs = catWith "_" options.getRocketChipGeneratorOptionsConfigNames
     def topModule = options.getRocketChipGeneratorOptionsTopModuleName
-    def relJar = relative runDir jar
-    def relTargetDir = relative runDir targetDir
+    def relJar = relative runDir jar.getPathName
+    def relTargetDir = relative runDir targetDir.getPathName
     which "java", "-cp", relJar, main,
     relTargetDir,
     rootPackage, topModule,
@@ -77,22 +77,22 @@ global def runRocketChipGenerator options =
     Nil
 
   def inputs =
-    def bootrom = simplify "{runDir}/bootrom/bootrom.img"
+    def bootrom = sources "rocket-chip/bootrom" 'bootrom\.img' | head
     def extras = options.getRocketChipGeneratorOptionsExtraSources
     jar, bootrom, targetDir, extras
 
   def generatorJob =
-    makeJob cmdline inputs
-    | setJobDirectory runDir
+    makePlan cmdline inputs
+    | setPlanDirectory runDir
     | runJob
 
-  def filterFiles regex = filter (matches regex) allOutputs
+  def filterFiles regex = filter (matches regex _.getPathName) allOutputs
   def getFile regex = filterFiles regex | head
   def getFileOpt regex = match (filterFiles regex)
     Nil        = None
     head, tail = Some head
 
-  def allOutputs = generatorJob.outputs
+  def allOutputs = generatorJob.getJobOutputs
   def annoFile    = getFile '.*\.anno\.json'
   def firrtlFile  = getFile '.*\.fir'
   def romConfFile = getFile '.*\.rom\.conf'
