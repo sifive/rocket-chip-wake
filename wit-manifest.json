@@ -13,5 +13,10 @@
         "commit": "45f5ae171a1950389f1b239b46a9e0d16ae0a6f4",
         "name": "berkeley-hardfloat",
         "source": "git@github.com:ucb-bar/berkeley-hardfloat.git"
+    },
+    {
+        "commit": "62b59ad766c23dd455a65c318eb272162c3094c1",
+        "name": "scala-wake",
+        "source": "git@github.com:freechipsproject/scala-wake.git"
     }
 ]
