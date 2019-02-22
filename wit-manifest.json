@@ -7,7 +7,7 @@
     {
         "commit": "e45b278600b434c4d4fb9e10649f25a590f96158",
         "name": "firrtl-wake",
-        "source": "git@github.com:freechipsproject/firrtl-wake.git"
+        "source": "git@github.com:sifive/firrtl-wake.git"
     },
     {
         "commit": "c569908857c4bf7aa18cb820aa40c9de13c489f8",
