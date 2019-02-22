@@ -5,7 +5,12 @@
         "source": "git@github.com:sifive/chisel3-wake.git"
     },
     {
-        "commit": "e22df2ff912b572e605c4a501ec307e7a4c462df",
+        "commit": "e45b278600b434c4d4fb9e10649f25a590f96158",
+        "name": "firrtl-wake",
+        "source": "git@github.com:freechipsproject/firrtl-wake.git"
+    },
+    {
+        "commit": "c569908857c4bf7aa18cb820aa40c9de13c489f8",
         "name": "rocket-chip",
         "source": "git@github.com:freechipsproject/rocket-chip.git"
     },
