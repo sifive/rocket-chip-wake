@@ -11,7 +11,7 @@ def vlsi_rom_gen = sources "rocket-chip/scripts" 'vlsi_rom_gen' | head
 
 tuple VLSIRomGenOptions =
   global ConfFile   Path
-  global HexFile    Path
+  global HexFile    String
   global OutputFile String
 
 global def makeVLSIRomGenOptions confFile hexFile outputFile = VLSIRomGenOptions confFile hexFile outputFile
@@ -19,7 +19,7 @@ global def makeVLSIRomGenOptions confFile hexFile outputFile = VLSIRomGenOptions
 global def rocket_vlsi_rom_gen options =
   def cmdline =
     def confFile = options.getVLSIRomGenOptionsConfFile.getPathName
-    def hexFile  = options.getVLSIRomGenOptionsHexFile.getPathName
+    def hexFile  = options.getVLSIRomGenOptionsHexFile
     vlsi_rom_gen.getPathName, confFile, hexFile, Nil
 
   def inputs =
