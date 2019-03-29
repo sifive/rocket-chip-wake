@@ -10,7 +10,7 @@
         "source": "git@github.com:sifive/firrtl-wake.git"
     },
     {
-        "commit": "c569908857c4bf7aa18cb820aa40c9de13c489f8",
+        "commit": "d98833b7ba2f384d90eb3bb317451881ab70fd9a",
         "name": "rocket-chip",
         "source": "git@github.com:freechipsproject/rocket-chip.git"
     },
