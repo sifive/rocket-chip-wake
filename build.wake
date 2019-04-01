@@ -1,11 +1,10 @@
 
 global def hardfloatProject = millScalaProject "hardfloat" here (chisel3Project, Nil) "hardfloat" "HardfloatBase"
 
-publish scalaProjects = hardfloatProject
-
 global def rocketchipProject = millScalaProject "rocketchip" here (hardfloatProject, Nil) "rocketchip" "RocketChipBase"
 
-publish scalaProjects = rocketchipProject
+publish scalaProjects = rocketchipProject, hardfloatProject, Nil
+
 def vlsi_mem_gen = sources "rocket-chip/scripts" 'vlsi_mem_gen' | head
 def vlsi_rom_gen = sources "rocket-chip/scripts" 'vlsi_rom_gen' | head
 
@@ -25,11 +24,11 @@ global def rocket_vlsi_rom_gen options =
   def inputs =
     def confFile = options.getVLSIRomGenOptionsConfFile
     def outputFile = options.getVLSIRomGenOptionsOutputFile
-    def outputDir = simplify "{outputFile}/.." | mkdir 0775
+    def outputDir = simplify "{outputFile}/.." | mkdir
     vlsi_rom_gen, confFile, outputDir, Nil
 
   def outputFile = options.getVLSIRomGenOptionsOutputFile
-  job cmdline inputs | getJobStdout | write 0664 outputFile
+  job cmdline inputs | getJobStdout | write outputFile
 
 tuple VLSIMemGenOptions =
   global BlackBox Boolean
@@ -48,7 +47,7 @@ global def rocket_vlsi_mem_gen options =
   def inputs =
     def confFile = options.getVLSIMemGenOptionsConfFile
     def outputFile = options.getVLSIMemGenOptionsOutputFile
-    def outputDir = simplify "{outputFile}/.." | mkdir 0775
+    def outputDir = simplify "{outputFile}/.." | mkdir
     vlsi_mem_gen, confFile, outputDir, Nil
 
   job cmdline inputs | getJobOutput
