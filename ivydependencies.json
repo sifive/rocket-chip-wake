@@ -1,0 +1,17 @@
+{
+  "hardfloat": {
+    "scalaVersion": "2.12.8"
+  },
+  "rocketchipMacros": {
+    "scalaVersion": "2.12.8",
+    "dependencies": [
+      "org.scala-lang:scala-reflect:2.12.8"
+    ]
+  },
+  "rocketchip": {
+    "scalaVersion": "2.12.8",
+    "dependencies": [
+      "org.json4s::json4s-jackson:3.5.3"
+    ]
+  }
+}

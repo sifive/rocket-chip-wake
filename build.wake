@@ -1,9 +1,23 @@
 
-global def hardfloatProject = millScalaProject "hardfloat" here (chisel3Project, Nil) "hardfloat" "HardfloatBase"
+global def hardfloatScalaModule _ =
+  makeScalaModuleFromJSON here "hardfloat"
+  | scalaModuleAddSBTDefaults
+  | setScalaModuleRootDir "berkeley-hardfloat"
+  | setScalaModuleDeps (chisel3ScalaModule Unit, Nil)
+  | setScalaModuleScalacOptions ("-Xsource:2.11", Nil)
 
-global def rocketchipProject = millScalaProject "rocketchip" here (hardfloatProject, Nil) "rocketchip" "RocketChipBase"
+global def rocketchipMacros _ =
+  makeScalaModuleFromJSON here "rocketchipMacros"
+  | scalaModuleAddSBTDefaults
+  | setScalaModuleRootDir "rocket-chip/macros"
+  | setScalaModuleScalacOptions (macrosParadisePlugin, Nil)
 
-publish scalaProjects = rocketchipProject, hardfloatProject, Nil
+global def rocketchipScalaModule _ =
+  makeScalaModuleFromJSON here "rocketchip"
+  | scalaModuleAddSBTDefaults
+  | setScalaModuleRootDir "rocket-chip"
+  | setScalaModuleDeps (rocketchipMacros Unit, hardfloatScalaModule Unit, Nil)
+  | setScalaModuleScalacOptions (macrosParadisePlugin, "-Xsource:2.11", Nil)
 
 def vlsi_mem_gen = sources "rocket-chip/scripts" 'vlsi_mem_gen' | head
 def vlsi_rom_gen = sources "rocket-chip/scripts" 'vlsi_rom_gen' | head
