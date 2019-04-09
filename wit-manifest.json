@@ -22,6 +22,6 @@
     {
         "commit": "62b59ad766c23dd455a65c318eb272162c3094c1",
         "name": "scala-wake",
-        "source": "git@github.com:freechipsproject/scala-wake.git"
+        "source": "git@github.com:sifive/scala-wake.git"
     }
 ]
