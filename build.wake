@@ -67,14 +67,14 @@ global def rocket_vlsi_mem_gen options =
   job cmdline inputs | getJobOutput
 
 tuple RocketChipGeneratorOptions =
-  global Jar           Path
+  global Jars          List Path
   global TargetDir     Path
   global TopModuleName String
   global ConfigNames   List String
   global ExtraSources  List Path
 
-global def makeRocketChipGeneratorOptions jar targetDir topModule configs =
-  RocketChipGeneratorOptions jar targetDir topModule configs Nil
+global def makeRocketChipGeneratorOptions jars targetDir topModule configs =
+  RocketChipGeneratorOptions jars targetDir topModule configs Nil
 
 tuple RocketChipGeneratorOutputs =
   DTS_            Path
@@ -94,7 +94,7 @@ global def getRocketChipGeneratorOutputsInputOptions    = getRocketChipGenerator
 global def getRocketChipGeneratorOutputsObjectModelFile = getRocketChipGeneratorOutputsOMFile_
 
 global def runRocketChipGenerator options =
-  def jar = options.getRocketChipGeneratorOptionsJar
+  def jars = options.getRocketChipGeneratorOptionsJars
   def runDir = "rocket-chip"
   def targetDir = options.getRocketChipGeneratorOptionsTargetDir
 
@@ -103,9 +103,10 @@ global def runRocketChipGenerator options =
     def main = "freechips.rocketchip.system.Generator"
     def configs = catWith "_" options.getRocketChipGeneratorOptionsConfigNames
     def topModule = options.getRocketChipGeneratorOptionsTopModuleName
-    def relJar = relative runDir jar.getPathName
+    def relJars = jars | map getPathName | map (relative runDir)
+    def classpath = catWith ":" relJars
     def relTargetDir = relative runDir targetDir.getPathName
-    which "java", "-cp", relJar, main,
+    which "java", "-cp", classpath, main,
     relTargetDir,
     rootPackage, topModule,
     rootPackage, configs,
@@ -114,7 +115,7 @@ global def runRocketChipGenerator options =
   def inputs =
     def bootrom = sources "rocket-chip/bootrom" 'bootrom\.img' | head
     def extras = options.getRocketChipGeneratorOptionsExtraSources
-    jar, bootrom, targetDir, extras
+    (bootrom, targetDir, extras) ++ jars
 
   def generatorJob =
     makePlan cmdline inputs
