@@ -20,7 +20,7 @@
         "source": "git@github.com:ucb-bar/berkeley-hardfloat.git"
     },
     {
-        "commit": "506061fc0c06114f618b344b74d94afeb2de8dbe",
+        "commit": "b13a2a37ab24447abc9619cc31481fa9e2c27104",
         "name": "scala-wake",
         "source": "git@github.com:sifive/scala-wake.git"
     }
