@@ -10,12 +10,12 @@
         "source": "git@github.com:sifive/firrtl-wake.git"
     },
     {
-        "commit": "d98833b7ba2f384d90eb3bb317451881ab70fd9a",
+        "commit": "265247fa3f9db6739a06959293e9257fc394832f",
         "name": "rocket-chip",
         "source": "git@github.com:freechipsproject/rocket-chip.git"
     },
     {
-        "commit": "45f5ae171a1950389f1b239b46a9e0d16ae0a6f4",
+        "commit": "70c1e1dd0954bb8e9d62563b8c9730bbc39d2bf0",
         "name": "berkeley-hardfloat",
         "source": "git@github.com:ucb-bar/berkeley-hardfloat.git"
     },
