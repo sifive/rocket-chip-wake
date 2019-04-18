@@ -1,31 +1,31 @@
 
-global def hardfloatScalaModule _ =
+global def hardfloatScalaModule =
   makeScalaModuleFromJSON here "hardfloat"
   | scalaModuleAddSBTDefaults
   | setScalaModuleRootDir "berkeley-hardfloat"
-  | setScalaModuleDeps (chisel3ScalaModule Unit, Nil)
+  | setScalaModuleDeps (chisel3ScalaModule, Nil)
   | setScalaModuleScalacOptions ("-Xsource:2.11", Nil)
 
-global def rocketchipMacros _ =
+global def rocketchipMacros =
   makeScalaModuleFromJSON here "rocketchipMacros"
   | scalaModuleAddSBTDefaults
   | setScalaModuleRootDir "rocket-chip/macros"
   | setScalaModuleScalacOptions (macrosParadisePlugin, Nil)
 
-global def rocketchipScalaModule _ =
+global def rocketchipScalaModule =
   makeScalaModuleFromJSON here "rocketchip"
   | scalaModuleAddSBTDefaults
   | setScalaModuleRootDir "rocket-chip"
-  | setScalaModuleDeps (rocketchipMacros Unit, hardfloatScalaModule Unit, Nil)
+  | setScalaModuleDeps (rocketchipMacros, hardfloatScalaModule, Nil)
   | setScalaModuleScalacOptions (macrosParadisePlugin, "-Xsource:2.11", Nil)
 
 def vlsi_mem_gen = sources "rocket-chip/scripts" 'vlsi_mem_gen' | head
 def vlsi_rom_gen = sources "rocket-chip/scripts" 'vlsi_rom_gen' | head
 
 tuple VLSIRomGenOptions =
-  global ConfFile   Path
-  global HexFile    String
-  global OutputFile String
+  global ConfFile:   Path
+  global HexFile:    String
+  global OutputFile: String
 
 global def makeVLSIRomGenOptions confFile hexFile outputFile = VLSIRomGenOptions confFile hexFile outputFile
 
@@ -45,9 +45,9 @@ global def rocket_vlsi_rom_gen options =
   job cmdline inputs | getJobStdout | write outputFile
 
 tuple VLSIMemGenOptions =
-  global BlackBox Boolean
-  global ConfFile Path
-  global OutputFile String
+  global BlackBox: Boolean
+  global ConfFile: Path
+  global OutputFile: String
 
 global def makeVLSIMemGenOptions confFile outputFile = VLSIMemGenOptions False confFile outputFile
 
@@ -67,23 +67,23 @@ global def rocket_vlsi_mem_gen options =
   job cmdline inputs | getJobOutput
 
 tuple RocketChipGeneratorOptions =
-  global Jars          List Path
-  global TargetDir     Path
-  global TopModuleName String
-  global ConfigNames   List String
-  global ExtraSources  List Path
+  global Jars:          List Path
+  global TargetDir:     Path
+  global TopModuleName: String
+  global ConfigNames:   List String
+  global ExtraSources:  List Path
 
 global def makeRocketChipGeneratorOptions jars targetDir topModule configs =
   RocketChipGeneratorOptions jars targetDir topModule configs Nil
 
 tuple RocketChipGeneratorOutputs =
-  DTS_            Path
-  FirrtlFile_     Path
-  FirrtlAnnoFile_ Path
-  RomConf_        Path
-  AllOutputs_     List Path
-  InputOptions_   RocketChipGeneratorOptions
-  OMFile_         Option Path
+  DTS_:            Path
+  FirrtlFile_:     Path
+  FirrtlAnnoFile_: Path
+  RomConf_:        Path
+  AllOutputs_:     List Path
+  InputOptions_:   RocketChipGeneratorOptions
+  OMFile_:         Option Path
 
 global def getRocketChipGeneratorOutputsDTS             = getRocketChipGeneratorOutputsDTS_
 global def getRocketChipGeneratorOutputsFirrtlFile      = getRocketChipGeneratorOutputsFirrtlFile_

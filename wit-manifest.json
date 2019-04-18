@@ -1,6 +1,6 @@
 [
     {
-        "commit": "361290d2cac7522852b2ccc0d057fc085a1577fc",
+        "commit": "143c2fb53fba1dee8395654d7b45b8b5abb44ecd",
         "name": "chisel3-wake",
         "source": "git@github.com:sifive/chisel3-wake.git"
     },
@@ -13,10 +13,5 @@
         "commit": "45f5ae171a1950389f1b239b46a9e0d16ae0a6f4",
         "name": "berkeley-hardfloat",
         "source": "git@github.com:ucb-bar/berkeley-hardfloat.git"
-    },
-    {
-        "commit": "c6cb5a1f0816f27896f0327b5dfd9c573b86b291",
-        "name": "scala-wake",
-        "source": "git@github.com:sifive/scala-wake.git"
     }
 ]
