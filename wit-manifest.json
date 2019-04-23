@@ -1,16 +1,16 @@
 [
     {
-        "commit": "39f91d5e78dafb926a102e40c34cb9b748910b21",
+        "commit": "cdad1cf8031747f625aca70fc1b9ffb3d7f4fdd9",
         "name": "chisel3-wake",
         "source": "git@github.com:sifive/chisel3-wake.git"
     },
     {
-        "commit": "516430afa93e0c6883836a986621609da6a688a5",
+        "commit": "13f14438cfae9db5ef00884ac58dcea4524ea312",
         "name": "firrtl-wake",
         "source": "git@github.com:sifive/firrtl-wake.git"
     },
     {
-        "commit": "265247fa3f9db6739a06959293e9257fc394832f",
+        "commit": "d98833b7ba2f384d90eb3bb317451881ab70fd9a",
         "name": "rocket-chip",
         "source": "git@github.com:freechipsproject/rocket-chip.git"
     },
@@ -18,10 +18,5 @@
         "commit": "70c1e1dd0954bb8e9d62563b8c9730bbc39d2bf0",
         "name": "berkeley-hardfloat",
         "source": "git@github.com:ucb-bar/berkeley-hardfloat.git"
-    },
-    {
-        "commit": "b13a2a37ab24447abc9619cc31481fa9e2c27104",
-        "name": "scala-wake",
-        "source": "git@github.com:sifive/scala-wake.git"
     }
 ]

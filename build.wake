@@ -1,9 +1,23 @@
 
-global def hardfloatProject = millScalaProject "hardfloat" here (chisel3Project, Nil) "hardfloat" "HardfloatBase"
+global def hardfloatScalaModule =
+  makeScalaModuleFromJSON here "hardfloat"
+  | scalaModuleAddSBTDefaults
+  | setScalaModuleRootDir "berkeley-hardfloat"
+  | setScalaModuleDeps (chisel3ScalaModule, Nil)
+  | setScalaModuleScalacOptions ("-Xsource:2.11", Nil)
 
-global def rocketchipProject = millScalaProject "rocketchip" here (hardfloatProject, Nil) "rocketchip" "RocketChipBase"
+global def rocketchipMacros =
+  makeScalaModuleFromJSON here "rocketchipMacros"
+  | scalaModuleAddSBTDefaults
+  | setScalaModuleRootDir "rocket-chip/macros"
+  | setScalaModuleScalacOptions (macrosParadisePlugin, Nil)
 
-publish scalaProjects = rocketchipProject, hardfloatProject, Nil
+global def rocketchipScalaModule =
+  makeScalaModuleFromJSON here "rocketchip"
+  | scalaModuleAddSBTDefaults
+  | setScalaModuleRootDir "rocket-chip"
+  | setScalaModuleDeps (rocketchipMacros, hardfloatScalaModule, Nil)
+  | setScalaModuleScalacOptions (macrosParadisePlugin, "-Xsource:2.11", Nil)
 
 def vlsi_mem_gen = sources "rocket-chip/scripts" 'vlsi_mem_gen' | head
 def vlsi_rom_gen = sources "rocket-chip/scripts" 'vlsi_rom_gen' | head
@@ -53,14 +67,14 @@ global def rocket_vlsi_mem_gen options =
   job cmdline inputs | getJobOutput
 
 tuple RocketChipGeneratorOptions =
-  global Jar:           Path
+  global Jars:          List Path
   global TargetDir:     Path
   global TopModuleName: String
   global ConfigNames:   List String
   global ExtraSources:  List Path
 
-global def makeRocketChipGeneratorOptions jar targetDir topModule configs =
-  RocketChipGeneratorOptions jar targetDir topModule configs Nil
+global def makeRocketChipGeneratorOptions jars targetDir topModule configs =
+  RocketChipGeneratorOptions jars targetDir topModule configs Nil
 
 tuple RocketChipGeneratorOutputs =
   DTS_:            Path
@@ -80,7 +94,7 @@ global def getRocketChipGeneratorOutputsInputOptions    = getRocketChipGenerator
 global def getRocketChipGeneratorOutputsObjectModelFile = getRocketChipGeneratorOutputsOMFile_
 
 global def runRocketChipGenerator options =
-  def jar = options.getRocketChipGeneratorOptionsJar
+  def jars = options.getRocketChipGeneratorOptionsJars
   def runDir = "rocket-chip"
   def targetDir = options.getRocketChipGeneratorOptionsTargetDir
 
@@ -89,9 +103,10 @@ global def runRocketChipGenerator options =
     def main = "freechips.rocketchip.system.Generator"
     def configs = catWith "_" options.getRocketChipGeneratorOptionsConfigNames
     def topModule = options.getRocketChipGeneratorOptionsTopModuleName
-    def relJar = relative runDir jar.getPathName
+    def relJars = jars | map getPathName | map (relative runDir)
+    def classpath = catWith ":" relJars
     def relTargetDir = relative runDir targetDir.getPathName
-    which "java", "-cp", relJar, main,
+    which "java", "-cp", classpath, main,
     relTargetDir,
     rootPackage, topModule,
     rootPackage, configs,
@@ -100,7 +115,7 @@ global def runRocketChipGenerator options =
   def inputs =
     def bootrom = sources "rocket-chip/bootrom" 'bootrom\.img' | head
     def extras = options.getRocketChipGeneratorOptionsExtraSources
-    jar, bootrom, targetDir, extras
+    (bootrom, targetDir, extras) ++ jars
 
   def generatorJob =
     makePlan cmdline inputs
