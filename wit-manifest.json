@@ -1,13 +1,8 @@
 [
     {
-        "commit": "cdad1cf8031747f625aca70fc1b9ffb3d7f4fdd9",
+        "commit": "b9b0d323fe9ab53808543c90c34ccf7d973ccb24",
         "name": "chisel3-wake",
         "source": "git@github.com:sifive/chisel3-wake.git"
-    },
-    {
-        "commit": "13f14438cfae9db5ef00884ac58dcea4524ea312",
-        "name": "firrtl-wake",
-        "source": "git@github.com:sifive/firrtl-wake.git"
     },
     {
         "commit": "48a224ac9c701008a81da5a119d9730e813edb03",
