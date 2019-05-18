@@ -1,23 +1,28 @@
 
+global def macrosParadiseIvyDep =
+  def json = readIvyDepsJSON here // "macrosParadise"
+  json // "dependencies"
+  | getJString
+  | getOrElse (raise "macrosParadise ivy dependency not found!")
+  | stringToIvyDep
+
 global def hardfloatScalaModule =
   makeScalaModuleFromJSON here "hardfloat"
-  | scalaModuleAddSBTDefaults
   | setScalaModuleRootDir "berkeley-hardfloat"
   | setScalaModuleDeps (chisel3ScalaModule, Nil)
   | setScalaModuleScalacOptions ("-Xsource:2.11", Nil)
 
 global def rocketchipMacros =
   makeScalaModuleFromJSON here "rocketchipMacros"
-  | scalaModuleAddSBTDefaults
   | setScalaModuleRootDir "rocket-chip/macros"
-  | setScalaModuleScalacOptions (macrosParadisePlugin, Nil)
+  | setScalaModuleCompilerPlugins (macrosParadiseIvyDep, Nil)
 
 global def rocketchipScalaModule =
   makeScalaModuleFromJSON here "rocketchip"
-  | scalaModuleAddSBTDefaults
   | setScalaModuleRootDir "rocket-chip"
   | setScalaModuleDeps (rocketchipMacros, hardfloatScalaModule, Nil)
-  | setScalaModuleScalacOptions (macrosParadisePlugin, "-Xsource:2.11", Nil)
+  | setScalaModuleScalacOptions ("-Xsource:2.11", Nil)
+  | setScalaModuleCompilerPlugins (macrosParadiseIvyDep, Nil)
 
 def vlsi_mem_gen = sources "rocket-chip/scripts" 'vlsi_mem_gen' | head
 def vlsi_rom_gen = sources "rocket-chip/scripts" 'vlsi_rom_gen' | head
