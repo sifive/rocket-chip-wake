@@ -13,5 +13,15 @@
         "commit": "70c1e1dd0954bb8e9d62563b8c9730bbc39d2bf0",
         "name": "berkeley-hardfloat",
         "source": "git@github.com:ucb-bar/berkeley-hardfloat.git"
+    },
+    {
+        "commit": "e1aa5f3f5c0cdeb204047c3ca50801d9f7ea25f1",
+        "name": "chisel3",
+        "source": "git@github.com:freechipsproject/chisel3.git"
+    },
+    {
+        "commit": "99ae1d6649f1731c5dec2098b10733735232b72c",
+        "name": "firrtl",
+        "source": "git@github.com:freechipsproject/firrtl.git"
     }
 ]
