@@ -1,9 +1,14 @@
+def mustPass = match _
+  Pass a = a
+  Fail b = panic b.format
+
+def nilPath = source '/dev/null'
 
 global def macrosParadiseIvyDep =
-  def json = readIvyDepsJSON here // "macrosParadise"
-  json // "dependencies"
+  def json = readIvyDepsJSON here // `macrosParadise`
+  json // `dependencies`
   | getJString
-  | getOrElse (raise "macrosParadise ivy dependency not found!")
+  | getOrElse (panic "macrosParadise ivy dependency not found!")
   | stringToIvyDep
 
 global def hardfloatScalaModule =
@@ -24,8 +29,10 @@ global def rocketchipScalaModule =
   | setScalaModuleScalacOptions ("-Xsource:2.11", Nil)
   | setScalaModuleCompilerPlugins (macrosParadiseIvyDep, Nil)
 
-def vlsi_mem_gen = sources "rocket-chip/scripts" 'vlsi_mem_gen' | head
-def vlsi_rom_gen = sources "rocket-chip/scripts" 'vlsi_rom_gen' | head
+
+
+def vlsi_mem_gen = sources "rocket-chip/scripts" `vlsi_mem_gen` | head | getOrElse nilPath
+def vlsi_rom_gen = sources "rocket-chip/scripts" `vlsi_rom_gen` | head | getOrElse nilPath
 
 tuple VLSIRomGenOptions =
   global ConfFile:   Path
@@ -47,7 +54,7 @@ global def rocket_vlsi_rom_gen options =
     vlsi_rom_gen, confFile, outputDir, Nil
 
   def outputFile = options.getVLSIRomGenOptionsOutputFile
-  job cmdline inputs | getJobStdout | write outputFile
+  job cmdline inputs | getJobStdout | mustPass | write outputFile
 
 tuple VLSIMemGenOptions =
   global BlackBox: Boolean
@@ -118,7 +125,7 @@ global def runRocketChipGenerator options =
     Nil
 
   def inputs =
-    def bootrom = sources "rocket-chip/bootrom" 'bootrom\.img' | head
+    def bootrom = sources "rocket-chip/bootrom" `bootrom\.img` | head | getOrElse nilPath
     def extras = options.getRocketChipGeneratorOptionsExtraSources
     (bootrom, targetDir, extras) ++ jars
 
@@ -128,16 +135,16 @@ global def runRocketChipGenerator options =
     | runJob
 
   def filterFiles regex = filter (matches regex _.getPathName) allOutputs
-  def getFile regex = filterFiles regex | head
+  def getFile regex = filterFiles regex | head | getOrElse nilPath
   def getFileOpt regex = match (filterFiles regex)
     Nil        = None
     head, tail = Some head
 
   def allOutputs = generatorJob.getJobOutputs
-  def annoFile    = getFile '.*\.anno\.json'
-  def firrtlFile  = getFile '.*\.fir'
-  def romConfFile = getFile '.*\.rom\.conf'
-  def dtsFile     = getFile '.*\.dts'
-  def omFile      = getFileOpt '.*\.objectModel\.json'
+  def annoFile    = getFile `.*\.anno\.json`
+  def firrtlFile  = getFile `.*\.fir`
+  def romConfFile = getFile `.*\.rom\.conf`
+  def dtsFile     = getFile `.*\.dts`
+  def omFile      = getFileOpt `.*\.objectModel\.json`
 
   RocketChipGeneratorOutputs dtsFile firrtlFile annoFile romConfFile allOutputs options omFile
