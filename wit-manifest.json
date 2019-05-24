@@ -1,6 +1,6 @@
 [
     {
-        "commit": "a3ebcc4466ef0e25585b47b453102d64583014ee",
+        "commit": "bd8e9b3313b5193d5dc597506f799ecc836aec08",
         "name": "chisel3-wake",
         "source": "git@github.com:sifive/chisel3-wake.git"
     },
