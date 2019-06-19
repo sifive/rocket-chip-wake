@@ -1,10 +1,5 @@
 [
     {
-        "commit": "bd8e9b3313b5193d5dc597506f799ecc836aec08",
-        "name": "chisel3-wake",
-        "source": "git@github.com:sifive/chisel3-wake.git"
-    },
-    {
         "commit": "48a224ac9c701008a81da5a119d9730e813edb03",
         "name": "rocket-chip",
         "source": "git@github.com:freechipsproject/rocket-chip.git"
@@ -13,5 +8,10 @@
         "commit": "70c1e1dd0954bb8e9d62563b8c9730bbc39d2bf0",
         "name": "berkeley-hardfloat",
         "source": "git@github.com:ucb-bar/berkeley-hardfloat.git"
+    },
+    {
+        "commit": "258e0bd41ddc8811725d51192a8fffb133b6f1c8",
+        "name": "api-chisel3-sifive",
+        "source": "git@github.com:sifive/api-chisel3-sifive.git"
     }
 ]
